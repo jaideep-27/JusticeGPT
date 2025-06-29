@@ -63,8 +63,8 @@ const translations: Record<string, Record<string, string>> = {
     'footer.phone': 'Phone',
     'footer.location': 'Location',
     'footer.copyright': '© 2024 JusticeGPT. All rights reserved.',
-    'footer.madewith': 'Made with',
-    'footer.forjustice': 'for justice',
+    'footer.madewith': 'Built with',
+    'footer.forjustice': 'Bolt.new',
     
     // Legal
     'legal.disclaimer': 'This AI provides general legal information only and does not constitute legal advice. Please consult with a qualified attorney for specific legal matters.',
