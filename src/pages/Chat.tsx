@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Send, 
-  Paperclip, 
-  Mic, 
-  MicOff, 
-  Volume2, 
+import {
+  Send,
+  Paperclip,
+  Mic,
+  MicOff,
+  Volume2,
   VolumeX,
   Bot,
   User,
@@ -60,7 +60,7 @@ const FormattedMessage = ({ content }: { content: string }) => {
   const formatContent = (text: string) => {
     // Split by double newlines to create paragraphs
     const paragraphs = text.split('\n\n');
-    
+
     return paragraphs.map((paragraph, index) => {
       // Handle different types of content
       if (paragraph.trim().startsWith('**') && paragraph.trim().endsWith('**')) {
@@ -251,13 +251,13 @@ export default function Chat() {
       messages: [],
       timestamp: new Date()
     };
-    
+
     const updatedSessions = [newSession, ...chatSessions];
     setChatSessions(updatedSessions);
     saveChatSessions(updatedSessions);
     setCurrentSessionId(newSessionId);
     setMessages([]);
-    
+
     // Add welcome message with user's jurisdiction
     const welcomeMessage: Message = {
       id: '1',
@@ -274,11 +274,11 @@ How can I assist you today?
 *Please note: I provide general legal information and should not be considered as legal advice. For specific legal matters, please consult with a qualified attorney.*`,
       timestamp: new Date(),
     };
-    
+
     setMessages([welcomeMessage]);
     newSession.messages = [welcomeMessage];
     newSession.title = 'Legal Consultation';
-    
+
     const finalSessions = [newSession, ...chatSessions];
     setChatSessions(finalSessions);
     saveChatSessions(finalSessions);
@@ -303,7 +303,7 @@ How can I assist you today?
     const updatedSessions = chatSessions.filter(s => s.id !== sessionId);
     setChatSessions(updatedSessions);
     saveChatSessions(updatedSessions);
-    
+
     if (currentSessionId === sessionId) {
       if (updatedSessions.length > 0) {
         loadChatSession(updatedSessions[0].id);
@@ -315,11 +315,11 @@ How can I assist you today?
 
   const updateCurrentSession = (newMessages: Message[]) => {
     if (!currentSessionId) return;
-    
+
     const updatedSessions = chatSessions.map(session => {
       if (session.id === currentSessionId) {
-        const title = newMessages.length > 1 ? 
-          newMessages[1].content.substring(0, 50) + '...' : 
+        const title = newMessages.length > 1 ?
+          newMessages[1].content.substring(0, 50) + '...' :
           'New Chat';
         return {
           ...session,
@@ -330,7 +330,7 @@ How can I assist you today?
       }
       return session;
     });
-    
+
     setChatSessions(updatedSessions);
     saveChatSessions(updatedSessions);
   };
@@ -368,10 +368,6 @@ How can I assist you today?
       });
     }
   };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || !user) return;
@@ -430,14 +426,14 @@ How can I assist you today?
     } catch (error) {
       console.error('Failed to generate response:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to generate response');
-      
+
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
         content: 'I apologize, but I encountered an error processing your request. Please try again or contact support if the issue persists.',
         timestamp: new Date(),
       };
-      
+
       const finalMessages = [...newMessages, errorMessage];
       setMessages(finalMessages);
       updateCurrentSession(finalMessages);
@@ -451,7 +447,7 @@ How can I assist you today?
     if (!files || files.length === 0 || !user) return;
 
     const file = files[0];
-    
+
     // Check file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
       toast.error('File size must be less than 10MB');
@@ -467,7 +463,7 @@ How can I assist you today?
     try {
       // Read file content
       const fileContent = await readFileContent(file);
-      
+
       const attachment = {
         name: file.name,
         size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
@@ -537,14 +533,14 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
   const readFileContent = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      
+
       reader.onload = (e) => {
         const content = e.target?.result as string;
         resolve(content);
       };
-      
+
       reader.onerror = () => reject(new Error('Failed to read file'));
-      
+
       reader.readAsText(file);
     });
   };
@@ -620,7 +616,7 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
               <span>New Chat</span>
             </button>
           </div>
-          
+
           <div className="p-4 space-y-2 max-h-[calc(100vh-200px)] overflow-y-auto">
             {chatSessions.map((session) => (
               <div
@@ -668,7 +664,7 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
                 >
                   {showSidebar ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                 </button>
-                
+
                 <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
                   <Bot className="w-6 h-6 text-white" />
                 </div>
@@ -700,7 +696,7 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 {/* Usage Indicator */}
                 {(subscription?.tierId === 'free' || user.plan === 'free') && !user.id.startsWith('local_') && (
@@ -709,7 +705,7 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
                       AI Usage: {Math.round(usagePercentage)}%
                     </div>
                     <div className="w-20 h-2 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-primary-500 transition-all duration-300"
                         style={{ width: `${usagePercentage}%` }}
                       />
@@ -756,7 +752,7 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
           </div>
 
           {/* Messages */}
-          <div 
+          <div
             ref={messagesContainerRef}
             className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-6 relative"
           >
@@ -799,7 +795,7 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
                         <Bot className="w-4 h-4 text-white" />
                       )}
                     </div>
-                    
+
                     <div className={`rounded-2xl px-4 py-3 ${
                       message.type === 'user'
                         ? 'bg-primary-500 text-white'
@@ -815,7 +811,7 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
                         ) : (
                           <FormattedMessage content={message.content} />
                         )}
-                        
+
                         {message.attachments && (
                           <div className="space-y-2">
                             {message.attachments.map((attachment, index) => (
@@ -856,12 +852,12 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
                           </div>
                         )}
                       </div>
-                      
+
                       <div className="flex items-center justify-between mt-3">
                         <span className="text-xs opacity-70">
                           {message.timestamp.toLocaleTimeString()}
                         </span>
-                        
+
                         {message.type === 'assistant' && (
                           <button
                             onClick={() => copyMessage(message.id, message.content)}
@@ -880,7 +876,7 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
                 </motion.div>
               ))}
             </AnimatePresence>
-            
+
             {isTyping && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -912,7 +908,7 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
                 </div>
               </motion.div>
             )}
-            
+
             <div ref={messagesEndRef} />
           </div>
 
