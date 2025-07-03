@@ -55,6 +55,105 @@ interface ChatSession {
   timestamp: Date;
 }
 
+// Component to format AI responses with proper markdown-like formatting
+const FormattedMessage = ({ content }: { content: string }) => {
+  const formatContent = (text: string) => {
+    // Split by double newlines to create paragraphs
+    const paragraphs = text.split('\n\n');
+    
+    return paragraphs.map((paragraph, index) => {
+      // Handle different types of content
+      if (paragraph.trim().startsWith('**') && paragraph.trim().endsWith('**')) {
+        // Bold headers
+        const headerText = paragraph.replace(/\*\*/g, '');
+        return (
+          <h3 key={index} className="text-lg font-semibold text-neutral-900 dark:text-white mb-3 mt-4 first:mt-0">
+            {headerText}
+          </h3>
+        );
+      } else if (paragraph.includes('**')) {
+        // Inline bold text
+        const parts = paragraph.split(/(\*\*.*?\*\*)/g);
+        return (
+          <p key={index} className="mb-3 leading-relaxed">
+            {parts.map((part, partIndex) => {
+              if (part.startsWith('**') && part.endsWith('**')) {
+                return (
+                  <strong key={partIndex} className="font-semibold text-neutral-900 dark:text-white">
+                    {part.replace(/\*\*/g, '')}
+                  </strong>
+                );
+              }
+              return part;
+            })}
+          </p>
+        );
+      } else if (paragraph.includes('•') || paragraph.includes('-')) {
+        // List items
+        const lines = paragraph.split('\n');
+        return (
+          <ul key={index} className="list-disc list-inside space-y-2 mb-4 ml-4">
+            {lines.map((line, lineIndex) => {
+              const cleanLine = line.replace(/^[•\-]\s*/, '').trim();
+              if (cleanLine) {
+                return (
+                  <li key={lineIndex} className="leading-relaxed">
+                    {cleanLine}
+                  </li>
+                );
+              }
+              return null;
+            })}
+          </ul>
+        );
+      } else if (paragraph.includes('✅') || paragraph.includes('⚠️') || paragraph.includes('❌')) {
+        // Status items with emojis
+        const lines = paragraph.split('\n');
+        return (
+          <div key={index} className="space-y-2 mb-4">
+            {lines.map((line, lineIndex) => {
+              if (line.trim()) {
+                return (
+                  <div key={lineIndex} className="flex items-start space-x-2 leading-relaxed">
+                    <span className="flex-shrink-0 mt-0.5">
+                      {line.includes('✅') && '✅'}
+                      {line.includes('⚠️') && '⚠️'}
+                      {line.includes('❌') && '❌'}
+                    </span>
+                    <span>{line.replace(/[✅⚠️❌]\s*/, '')}</span>
+                  </div>
+                );
+              }
+              return null;
+            })}
+          </div>
+        );
+      } else if (paragraph.trim().startsWith('*') && paragraph.trim().endsWith('*')) {
+        // Italic disclaimer text
+        const italicText = paragraph.replace(/\*/g, '');
+        return (
+          <p key={index} className="text-sm italic text-neutral-500 dark:text-neutral-400 mb-3 p-3 bg-neutral-100 dark:bg-neutral-700 rounded-lg">
+            {italicText}
+          </p>
+        );
+      } else {
+        // Regular paragraphs
+        return (
+          <p key={index} className="mb-3 leading-relaxed">
+            {paragraph}
+          </p>
+        );
+      }
+    });
+  };
+
+  return (
+    <div className="prose prose-sm max-w-none dark:prose-invert">
+      {formatContent(content)}
+    </div>
+  );
+};
+
 export default function Chat() {
   const { user } = useAuth();
   const { translate, currentLanguage } = useLanguage();
@@ -82,6 +181,11 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    scrollToTop();
+  }, []);
 
   // Initialize chat session and detect location
   useEffect(() => {
@@ -186,6 +290,12 @@ How can I assist you today?
       setCurrentSessionId(sessionId);
       setMessages(session.messages);
       setShowSidebar(false); // Close sidebar on mobile after selection
+      // Scroll to top when loading a new session
+      setTimeout(() => {
+        if (messagesContainerRef.current) {
+          messagesContainerRef.current.scrollTop = 0;
+        }
+      }, 100);
     }
   };
 
@@ -696,11 +806,15 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
                         : 'bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-700'
                     }`}>
                       <div className="space-y-3">
-                        <div className="prose prose-sm max-w-none dark:prose-invert">
-                          <p className="whitespace-pre-wrap leading-relaxed">
-                            {message.content}
-                          </p>
-                        </div>
+                        {message.type === 'user' ? (
+                          <div className="prose prose-sm max-w-none dark:prose-invert">
+                            <p className="whitespace-pre-wrap leading-relaxed text-white">
+                              {message.content}
+                            </p>
+                          </div>
+                        ) : (
+                          <FormattedMessage content={message.content} />
+                        )}
                         
                         {message.attachments && (
                           <div className="space-y-2">
@@ -807,7 +921,7 @@ ${analysis.compliance.issues.length > 0 ? '\n\nIssues identified:\n' + analysis.
             <div className="flex items-start space-x-3">
               <AlertTriangle className="w-5 h-5 text-warning-500 mt-0.5" />
               <p className="text-sm text-warning-700 dark:text-warning-400">
-                {translate('legal.disclaimer')}
+                This AI provides general legal information only and does not constitute legal advice. Please consult with a qualified attorney for specific legal matters.
               </p>
             </div>
           </div>
