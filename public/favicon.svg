@@ -1,11 +1,41 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
-  <path d="M16 6L20 10H18V16H20L16 20L12 16H14V10H12L16 6Z" fill="white"/>
-  <path d="M8 22H24V24H8V22Z" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
   <defs>
-    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="scaleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:1" />
     </linearGradient>
   </defs>
+  
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="15" fill="url(#scaleGradient)" stroke="#1E293B" stroke-width="1"/>
+  
+  <!-- Scale of Justice -->
+  <g transform="translate(16, 16)">
+    <!-- Central pole -->
+    <rect x="-0.5" y="-8" width="1" height="16" fill="white"/>
+    
+    <!-- Top horizontal bar -->
+    <rect x="-6" y="-8.5" width="12" height="1" fill="white"/>
+    
+    <!-- Left scale -->
+    <g transform="translate(-4, -7)">
+      <!-- Chain -->
+      <line x1="0" y1="0" x2="0" y2="3" stroke="white" stroke-width="0.5"/>
+      <!-- Pan -->
+      <ellipse cx="0" cy="4" rx="2.5" ry="0.8" fill="white"/>
+      <path d="M -2.5 4 Q 0 5.5 2.5 4" stroke="white" stroke-width="0.5" fill="none"/>
+    </g>
+    
+    <!-- Right scale -->
+    <g transform="translate(4, -7)">
+      <!-- Chain -->
+      <line x1="0" y1="0" x2="0" y2="3" stroke="white" stroke-width="0.5"/>
+      <!-- Pan -->
+      <ellipse cx="0" cy="4" rx="2.5" ry="0.8" fill="white"/>
+      <path d="M -2.5 4 Q 0 5.5 2.5 4" stroke="white" stroke-width="0.5" fill="none"/>
+    </g>
+    
+    <!-- Base -->
+    <rect x="-3" y="7" width="6" height="1" fill="white"/>
+  </g>
 </svg>
