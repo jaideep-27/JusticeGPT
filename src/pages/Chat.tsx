@@ -360,6 +360,14 @@ How can I assist you today?
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  useEffect(() => {
+    // Only scroll to bottom if the last message is from the assistant and typing has stopped
+    if (messages.length > 0 && messages[messages.length - 1].type === 'assistant' && !isTyping) {
+      scrollToBottom();
+    }
+  }, [messages, isTyping]); // Depend on messages and isTyping to trigger when response is complete
+
+
   const scrollMessagesToTop = () => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
