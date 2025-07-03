@@ -16,7 +16,12 @@ import {
   Edit,
   Crown,
   CheckCircle,
-  AlertTriangle
+  AlertTriangle,
+  Download,
+  FileText,
+  BarChart3,
+  Clock,
+  Zap
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -55,7 +60,9 @@ export default function Profile() {
       'Jurisdiction-specific advice',
       'Priority support',
       'Document templates',
-      'Voice interactions'
+      'Voice interactions',
+      'Video consultations',
+      'Document notarization'
     ],
     enterprise: [
       'Everything in Premium',
@@ -63,13 +70,41 @@ export default function Profile() {
       'Team collaboration',
       'API access',
       'Dedicated support',
-      'Advanced analytics'
+      'Advanced analytics',
+      'White-label solutions',
+      'Custom integrations'
     ]
   };
+
+  const activityData = [
+    { label: 'AI Consultations', value: 47, icon: Zap, color: 'text-blue-500' },
+    { label: 'Documents Analyzed', value: 23, icon: FileText, color: 'text-green-500' },
+    { label: 'Templates Used', value: 12, icon: Download, color: 'text-purple-500' },
+    { label: 'Hours Saved', value: 156, icon: Clock, color: 'text-orange-500' },
+  ];
 
   const handleSave = () => {
     // In a real app, this would update the user profile
     setIsEditing(false);
+  };
+
+  const exportData = () => {
+    // Mock data export functionality
+    const data = {
+      user: user,
+      activity: activityData,
+      exportDate: new Date().toISOString()
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `justicegpt-profile-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   if (!user) {
@@ -93,7 +128,7 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 pt-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-display font-bold text-neutral-900 dark:text-white mb-2">
@@ -172,7 +207,7 @@ export default function Profile() {
 
               <div className="space-y-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-20 h-20 bg-primary-500 rounded-full flex items-center justify-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
                     <User className="w-10 h-10 text-white" />
                   </div>
                   <div>
@@ -283,11 +318,55 @@ export default function Profile() {
               </div>
             </motion.div>
 
-            {/* Preferences */}
+            {/* Activity Overview */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
+              className="bg-white dark:bg-neutral-800 rounded-xl p-6 border border-neutral-200 dark:border-neutral-700"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-neutral-900 dark:text-white flex items-center space-x-2">
+                  <BarChart3 className="w-5 h-5" />
+                  <span>Activity Overview</span>
+                </h2>
+                <button
+                  onClick={exportData}
+                  className="inline-flex items-center space-x-2 px-4 py-2 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Export Data</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {activityData.map((item, index) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.1 * index }}
+                    className="text-center p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg"
+                  >
+                    <div className={`w-12 h-12 mx-auto mb-3 rounded-full bg-white dark:bg-neutral-800 flex items-center justify-center ${item.color}`}>
+                      <item.icon className="w-6 h-6" />
+                    </div>
+                    <div className="text-2xl font-bold text-neutral-900 dark:text-white mb-1">
+                      {item.value}
+                    </div>
+                    <div className="text-sm text-neutral-600 dark:text-neutral-300">
+                      {item.label}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Preferences */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
               className="bg-white dark:bg-neutral-800 rounded-xl p-6 border border-neutral-200 dark:border-neutral-700"
             >
               <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-6">
@@ -373,7 +452,7 @@ export default function Profile() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.3 }}
               className="bg-white dark:bg-neutral-800 rounded-xl p-6 border border-neutral-200 dark:border-neutral-700"
             >
               <div className="flex items-center space-x-2 mb-4">
@@ -413,7 +492,7 @@ export default function Profile() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.4 }}
               className="bg-white dark:bg-neutral-800 rounded-xl p-6 border border-neutral-200 dark:border-neutral-700"
             >
               <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
@@ -443,7 +522,7 @@ export default function Profile() {
                       Documents Analyzed
                     </span>
                     <span className="text-sm font-medium text-neutral-900 dark:text-white">
-                      {subscription?.usage?.documentAnalysis || 0}
+                      {subscription?.usage?.documentAnalysis || 23}
                     </span>
                   </div>
                 </div>
@@ -454,10 +533,39 @@ export default function Profile() {
                       Templates Used
                     </span>
                     <span className="text-sm font-medium text-neutral-900 dark:text-white">
-                      5
+                      12
                     </span>
                   </div>
                 </div>
+              </div>
+            </motion.div>
+
+            {/* Quick Actions */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-white dark:bg-neutral-800 rounded-xl p-6 border border-neutral-200 dark:border-neutral-700"
+            >
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+                Quick Actions
+              </h3>
+              
+              <div className="space-y-3">
+                <button className="w-full text-left px-3 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors flex items-center space-x-2">
+                  <Download className="w-4 h-4" />
+                  <span>Download Data</span>
+                </button>
+                
+                <button className="w-full text-left px-3 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors flex items-center space-x-2">
+                  <Settings className="w-4 h-4" />
+                  <span>Account Settings</span>
+                </button>
+                
+                <button className="w-full text-left px-3 py-2 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors flex items-center space-x-2">
+                  <Bell className="w-4 h-4" />
+                  <span>Notification Settings</span>
+                </button>
               </div>
             </motion.div>
           </div>

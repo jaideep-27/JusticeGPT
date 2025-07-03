@@ -140,7 +140,12 @@ export default function Footer() {
               </div>
               <div>
                 <div className="text-sm text-neutral-400 font-medium">{translate('footer.email')}</div>
-                <div className="text-white font-semibold text-lg">support@justicegpt.ai</div>
+                <a 
+                  href="mailto:justicegpt@gmail.com"
+                  className="text-white font-semibold text-lg hover:text-primary-400 transition-colors"
+                >
+                  justicegpt@gmail.com
+                </a>
               </div>
             </div>
             
@@ -150,7 +155,12 @@ export default function Footer() {
               </div>
               <div>
                 <div className="text-sm text-neutral-400 font-medium">{translate('footer.phone')}</div>
-                <div className="text-white font-semibold text-lg">+1 (555) 123-4567</div>
+                <a 
+                  href="tel:+919390550397"
+                  className="text-white font-semibold text-lg hover:text-secondary-400 transition-colors"
+                >
+                  +91 9390550397
+                </a>
               </div>
             </div>
             
@@ -160,7 +170,7 @@ export default function Footer() {
               </div>
               <div>
                 <div className="text-sm text-neutral-400 font-medium">{translate('footer.location')}</div>
-                <div className="text-white font-semibold text-lg">Global Operations</div>
+                <div className="text-white font-semibold text-lg">India & Global</div>
               </div>
             </div>
           </div>
@@ -175,12 +185,12 @@ export default function Footer() {
               transition={{ duration: 0.6, delay: 0.5 }}
               className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 text-neutral-400"
             >
-              <span className="text-base">{translate('footer.copyright')}</span>
+              <span className="text-base">© 2024 JusticeGPT. All rights reserved.</span>
               <span className="hidden sm:inline">•</span>
               <span className="flex items-center space-x-2 text-base">
-                <span>{translate('footer.madewith')}</span>
+                <span>Built with</span>
                 <Heart className="w-4 h-4 text-red-500 mx-1" />
-                <span>{translate('footer.forjustice')}</span>
+                <span>for justice</span>
               </span>
             </motion.div>
             
@@ -191,7 +201,7 @@ export default function Footer() {
               className="bg-warning-500/10 border border-warning-500/20 rounded-xl p-6 max-w-2xl"
             >
               <p className="text-sm text-warning-400 font-medium text-center leading-relaxed">
-                {translate('legal.disclaimer')}
+                This AI provides general legal information only and does not constitute legal advice. Please consult with a qualified attorney for specific legal matters.
               </p>
             </motion.div>
           </div>
